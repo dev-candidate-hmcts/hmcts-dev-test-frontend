@@ -1,0 +1,34 @@
+{% extends "template.njk" %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">
+      Task Manager
+    </h1>
+
+    <p class="govuk-body">
+      A simple application to create, update and track tasks.
+    </p>
+
+    <p class="govuk-body">
+      You can:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Create new tasks</li>
+      <li>Update task title and due date</li>
+      <li>Track task status</li>
+      <li>Delete tasks</li>
+    </ul>
+
+    <a href="/tasks" class="govuk-button govuk-button--start">
+      Go to tasks
+    </a>
+
+  </div>
+</div>
+
+{% endblock %}

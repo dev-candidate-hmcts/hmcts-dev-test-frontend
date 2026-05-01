@@ -1,0 +1,101 @@
+{% extends "template.njk" %}
+
+{% block content %}
+
+<h1 class="govuk-heading-l">Task Manager</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h2 class="govuk-heading-m">Create a new task</h2>
+
+    <form method="post" action="/tasks" class="govuk-!-margin-bottom-8">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="title">Title</label>
+        <input class="govuk-input" id="title" name="title" type="text" required>
+      </div>
+
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="dueDate">Due date and time</label>
+        <input class="govuk-input" id="dueDate" name="dueDate" type="date" required>
+      </div>
+
+      <button class="govuk-button" type="submit">Add task</button>
+    </form>
+
+    <h2 class="govuk-heading-m">Tasks</h2>
+
+    {% if error %}
+      <p class="govuk-error-message">{{ error }}</p>
+    {% endif %}
+
+    {% if tasks.length === 0 %}
+      <p class="govuk-body">No tasks yet.</p>
+    {% endif %}
+
+    {% for task in tasks %}
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h3 class="govuk-summary-card__title">{{ task.title }}</h3>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <form method="post" action="/tasks/{{ task.id }}/delete">
+                <button class="govuk-link govuk-link--no-visited-state" type="submit">
+                  Delete
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+
+        <div class="govuk-summary-card__content">
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Status</dt>
+              <dd class="govuk-summary-list__value">{{ task.status }}</dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Due date</dt>
+              <dd class="govuk-summary-list__value">{{ task.dueDate }}</dd>
+            </div>
+          </dl>
+
+          <form method="post" action="/tasks/{{ task.id }}/edit" class="govuk-!-margin-top-4">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="title-{{ task.id }}">Edit title</label>
+              <input class="govuk-input" id="title-{{ task.id }}" name="title" type="text" value="{{ task.title }}">
+            </div>
+
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="dueDate-{{ task.id }}">Edit due date</label>
+              <input class="govuk-input" id="dueDate-{{ task.id }}" name="dueDate" type="date" value="{{ task.dueDate }}">
+            </div>
+
+            <button class="govuk-button govuk-button--secondary" type="submit">Update task</button>
+          </form>
+
+          <div class="govuk-button-group govuk-!-margin-top-4">
+            <form method="post" action="/tasks/{{ task.id }}/status">
+              <input type="hidden" name="status" value="TODO">
+              <button class="govuk-button {{ 'govuk-button--secondary' if task.status != 'TODO' }}" type="submit">To do</button>
+            </form>
+
+            <form method="post" action="/tasks/{{ task.id }}/status">
+              <input type="hidden" name="status" value="IN_PROGRESS">
+              <button class="govuk-button {{ 'govuk-button--secondary' if task.status != 'IN_PROGRESS' }}" type="submit">In progress</button>
+            </form>
+
+            <form method="post" action="/tasks/{{ task.id }}/status">
+              <input type="hidden" name="status" value="COMPLETED">
+              <button class="govuk-button {{ 'govuk-button--secondary' if task.status != 'COMPLETED' }}" type="submit">Completed</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}
